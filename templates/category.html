@@ -69,6 +69,23 @@
     .compare-button.active i {
         color: #3498db;
     }
+    
+    .product-rating-mini {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 5px;
+    }
+    
+    .product-rating-mini .stars {
+        font-size: 0.8em;
+        color: #ffc107;
+    }
+    
+    .rating-count {
+        font-size: 0.7em;
+        color: #666;
+    }
 </style>
 {% endblock %}
 
@@ -97,11 +114,13 @@
                     <div class="filter-group">
                         <label for="sort-select">Сортировать по:</label>
                         <select name="sort" id="sort-select" title="Параметр сортировки товаров">
-                            <option value="price_asc">Цена (по возрастанию)</option>
-                            <option value="price_desc">Цена (по убыванию)</option>
-                            <option value="name_asc">Название (А-Я)</option>
-                            <option value="name_desc">Название (Я-А)</option>
-                            <option value="new">Сначала новые</option>
+                            <option value="default" {% if sort_by == 'default' %}selected{% endif %}>По умолчанию</option>
+                            <option value="rating_high" {% if sort_by == 'rating_high' %}selected{% endif %}>Рейтинг (высокий)</option>
+                            <option value="rating_low" {% if sort_by == 'rating_low' %}selected{% endif %}>Рейтинг (низкий)</option>
+                            <option value="reviews_high" {% if sort_by == 'reviews_high' %}selected{% endif %}>Больше положительных отзывов</option>
+                            <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>Цена (дорогие)</option>
+                            <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>Цена (дешевые)</option>
+                            <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Новые поступления</option>
                         </select>
                     </div>
                     
@@ -141,6 +160,18 @@
                     <div class="product-info">
                         <div class="product-title">
                             <a href="{{ url_for('shop.product', product_id=product.id) }}">{{ product.name }}</a>
+                        </div>
+                        <div class="product-rating-mini">
+                            <div class="stars">
+                                {% for i in range(1, 6) %}
+                                    {% if i <= product.avg_rating|round(0, 'common') %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <span class="rating-count">({{ product.total_ratings_count }})</span>
                         </div>
                         <div class="product-price">{{ product.price }} ₽</div>
                         <div class="product-actions">
