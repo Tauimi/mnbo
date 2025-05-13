@@ -6,4 +6,8 @@ from .user import User
 from .product import Product, Specification
 from .category import Category, CategorySpecificationTemplate
 from .order import Order, order_items
-from .visitor import Visitor 
+from .visitor import Visitor
+
+# Импорт моделей из основного файла models.py
+# Создаем псевдонимы для прямого доступа из my_app.models
+from ..models import Review, ReviewVote, Rating, FeedbackMessage 

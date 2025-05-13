@@ -1,3 +1,6 @@
+from datetime import datetime
+from my_app.extensions import db
+
 class FeedbackMessage(db.Model):
     """Модель для сообщений обратной связи"""
     __tablename__ = 'feedback_messages'
