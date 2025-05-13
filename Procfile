@@ -1,0 +1,1 @@
+web: python auto_config.py && python migration.py && python init_db.py && gunicorn wsgi:app
