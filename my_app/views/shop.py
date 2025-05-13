@@ -52,16 +52,100 @@ def home():
 @shop_bp.route('/catalog')
 def catalog():
     """Страница каталога"""
+    # Получаем параметры сортировки из запроса
+    sort_by = request.args.get('sort', 'default')
+    
+    # Получаем все категории верхнего уровня
     categories = Category.query.filter_by(parent_id=None).all()
-    return render_template('catalog.html', categories=categories)
+    
+    # Получаем все товары
+    products_query = Product.query
+    
+    # Применяем сортировку
+    if sort_by == 'rating_high':
+        # Сортировка по рейтингу (от высокого к низкому)
+        products = sorted(products_query.all(), key=lambda p: p.avg_rating, reverse=True)
+    elif sort_by == 'rating_low':
+        # Сортировка по рейтингу (от низкого к высокому)
+        products = sorted(products_query.all(), key=lambda p: p.avg_rating)
+    elif sort_by == 'reviews_high':
+        # Сортировка по количеству положительных отзывов (отзывы с рейтингом 4-5)
+        from sqlalchemy import func
+        from my_app.models import Review
+        
+        # Создаем подзапрос для подсчета положительных отзывов
+        positive_reviews_subquery = db.session.query(
+            Review.product_id,
+            func.count(Review.id).label('positive_count')
+        ).filter(Review.rating >= 4).group_by(Review.product_id).subquery()
+        
+        # Джойним с основным запросом
+        products_query = products_query.outerjoin(
+            positive_reviews_subquery,
+            Product.id == positive_reviews_subquery.c.product_id
+        )
+        
+        # Сортируем по количеству положительных отзывов (с учетом NULL)
+        products = sorted(
+            products_query.all(),
+            key=lambda p: len([r for r in p.reviews if r.rating >= 4]),
+            reverse=True
+        )
+    elif sort_by == 'price_high':
+        # Сортировка по цене (от высокой к низкой)
+        products = products_query.order_by(Product.price.desc()).all()
+    elif sort_by == 'price_low':
+        # Сортировка по цене (от низкой к высокой)
+        products = products_query.order_by(Product.price).all()
+    elif sort_by == 'newest':
+        # Сортировка по новизне
+        products = products_query.order_by(Product.created_at.desc()).all()
+    else:
+        # По умолчанию - без сортировки
+        products = products_query.all()
+    
+    return render_template('catalog.html', 
+                          categories=categories, 
+                          products=products,
+                          sort_by=sort_by)
 
 @shop_bp.route('/category/<int:category_id>')
 def category(category_id):
     """Страница категории"""
+    # Получаем параметры сортировки из запроса
+    sort_by = request.args.get('sort', 'default')
+    
     category = Category.query.get_or_404(category_id)
     
     # Получаем все товары в этой категории
-    products = Product.query.filter_by(category_id=category_id).all()
+    products_query = Product.query.filter_by(category_id=category_id)
+    
+    # Применяем сортировку
+    if sort_by == 'rating_high':
+        # Сортировка по рейтингу (от высокого к низкому)
+        products = sorted(products_query.all(), key=lambda p: p.avg_rating, reverse=True)
+    elif sort_by == 'rating_low':
+        # Сортировка по рейтингу (от низкого к высокому)
+        products = sorted(products_query.all(), key=lambda p: p.avg_rating)
+    elif sort_by == 'reviews_high':
+        # Сортировка по количеству положительных отзывов (отзывы с рейтингом 4-5)
+        products = sorted(
+            products_query.all(),
+            key=lambda p: len([r for r in p.reviews if r.rating >= 4]),
+            reverse=True
+        )
+    elif sort_by == 'price_high':
+        # Сортировка по цене (от высокой к низкой)
+        products = products_query.order_by(Product.price.desc()).all()
+    elif sort_by == 'price_low':
+        # Сортировка по цене (от низкой к высокой)
+        products = products_query.order_by(Product.price).all()
+    elif sort_by == 'newest':
+        # Сортировка по новизне
+        products = products_query.order_by(Product.created_at.desc()).all()
+    else:
+        # По умолчанию - без сортировки
+        products = products_query.all()
     
     # Получаем подкатегории
     subcategories = Category.query.filter_by(parent_id=category_id).all()
@@ -69,7 +153,8 @@ def category(category_id):
     return render_template('category.html', 
                           category=category, 
                           products=products, 
-                          subcategories=subcategories)
+                          subcategories=subcategories,
+                          sort_by=sort_by)
 
 @shop_bp.route('/product/<int:product_id>')
 def product(product_id):

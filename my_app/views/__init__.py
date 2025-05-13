@@ -11,6 +11,8 @@ from .profile import profile_bp
 from .static_pages import static_pages_bp
 from .favorites import favorites_bp
 from .compare import compare_bp
+from .feedback import feedback_bp
+from .reviews import reviews_bp
 
 # Список всех blueprint для регистрации
 all_blueprints = [
@@ -21,5 +23,7 @@ all_blueprints = [
     profile_bp,
     static_pages_bp,
     favorites_bp,
-    compare_bp
+    compare_bp,
+    feedback_bp,
+    reviews_bp
 ] 

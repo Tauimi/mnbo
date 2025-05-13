@@ -16,7 +16,7 @@ def delivery():
     """Страница о доставке"""
     return render_template('delivery.html')
 
-@static_pages_bp.route('/contact')
+@static_pages_bp.route('/contact', methods=['GET', 'POST'])
 def contact():
     """Страница контактов"""
     return render_template('contact.html')
