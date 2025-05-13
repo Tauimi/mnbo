@@ -1,7 +1,8 @@
 """
 Blueprint для основных страниц магазина
 """
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, session, abort
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, session, abort, send_from_directory
+import os
 from sqlalchemy import func
 from my_app.extensions import db
 from my_app.models import Product, Category, Visitor
@@ -24,6 +25,9 @@ def home():
     # Получаем категории для меню
     categories = Category.query.filter_by(parent_id=None).all()
     
+    # Получаем все товары для отображения на главной странице
+    products = featured_products
+    
     # Статистика
     stats = {
         'products_count': Product.query.count(),
@@ -42,6 +46,7 @@ def home():
                           new_products=new_products,
                           sale_products=sale_products,
                           categories=categories,
+                          products=products,
                           stats=stats)
 
 @shop_bp.route('/catalog')
@@ -104,4 +109,30 @@ def search():
     return render_template('search_results.html', 
                           query=query, 
                           products=products, 
-                          categories=categories) 
+                          categories=categories)
+
+@shop_bp.route('/carousel/<int:slide_id>')
+def get_carousel_image(slide_id):
+    """Возвращает изображение для карусели"""
+    # Словарь с именами файлов для каждого слайда
+    carousel_images = {
+        1: 'carousel-1.jpg',
+        2: 'carousel-2.jpg',
+        3: 'carousel-3.jpg'
+    }
+    
+    # Получаем имя файла или используем запасное изображение
+    image_name = carousel_images.get(slide_id, 'carousel-default.jpg')
+    
+    # Путь к директории с изображениями карусели
+    carousel_dir = os.path.join(current_app.static_folder, 'images', 'carousel')
+    
+    # Если директория не существует, создаем ее
+    if not os.path.exists(carousel_dir):
+        os.makedirs(carousel_dir)
+        
+        # Если файлы не существуют, используем запасное изображение
+        if not os.path.exists(os.path.join(carousel_dir, image_name)):
+            image_name = 'default.jpg'
+    
+    return send_from_directory(os.path.join(current_app.static_folder, 'images', 'carousel'), image_name) 
