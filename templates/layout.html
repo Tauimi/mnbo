@@ -55,6 +55,20 @@
     {% include 'footer.html' %}
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+<script>
+  // Обработка глобальных ошибок JavaScript
+  window.addEventListener('error', function(e) {
+    console.error('Глобальная ошибка:', e.message);
+  });
+  
+  // Обеспечение интерактивности после обновления страницы
+  document.addEventListener('DOMContentLoaded', function() {
+    if (document.body) {
+      document.body.classList.add('js-loaded');
+    }
+  });
+</script>
     <script src="{{ url_for('static', filename='js/cart_indicator.js') }}"></script>
     <script src="{{ url_for('static', filename='js/compare_indicator.js') }}"></script>
     <script src="{{ url_for('static', filename='js/accessibility.js') }}"></script>
