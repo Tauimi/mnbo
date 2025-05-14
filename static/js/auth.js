@@ -32,4 +32,29 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+  
+  // Исправляем проблему с навигацией - добавляем обработчики для всех ссылок в шапке
+  const headerLinks = document.querySelectorAll('header a, nav a');
+  headerLinks.forEach(link => {
+    // Удаляем все существующие обработчики, чтобы избежать дублирования
+    const newLink = link.cloneNode(true);
+    link.parentNode.replaceChild(newLink, link);
+    
+    newLink.addEventListener('click', function(e) {
+      // Улучшаем обработку кликов
+      if (this.getAttribute('href')) {
+        // Предотвращаем отмену события кликов другими обработчиками
+        e.stopPropagation();
+        console.log('Переход по ссылке:', this.getAttribute('href'));
+      }
+    });
+  });
+  
+  // Убеждаемся, что все клики в шапке обрабатываются корректно
+  document.querySelector('header').addEventListener('click', function(e) {
+    // Потенциально интерактивный элемент, но клик был не на ссылке
+    if (!e.target.closest('a') && !e.target.closest('button')) {
+      e.stopPropagation();
+    }
+  }, true);
 });

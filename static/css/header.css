@@ -1,16 +1,22 @@
-/* Стили для шапки сайта */
+/* Современные стили для шапки сайта */
 header {
     background-color: var(--header-bg);
-    box-shadow: var(--box-shadow);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: background-color 0.3s;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 0;
+    padding: 12px 0;
     flex-wrap: wrap;
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .logo {
@@ -21,7 +27,7 @@ header {
 }
 
 .logo img, .logo picture {
-    height: 50px;
+    height: 40px;
     width: auto;
     max-width: 150px;
     margin-right: 10px;
@@ -29,9 +35,9 @@ header {
 }
 
 .logo-text {
-    font-size: 24px;
-    font-weight: bold;
-    color: #2c3e50 !important; /* Принудительно установленный темный цвет */
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary-color) !important; /* Основной цвет темы */
     transition: color 0.3s;
 }
 
@@ -56,59 +62,67 @@ body.dark-theme .header-clock {
 .search-form {
     display: flex;
     flex: 1;
-    max-width: 500px;
+    max-width: 600px;
     margin: 0 20px;
 }
 
 .search-form input {
     width: 100%;
-    padding: 10px 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px 0 0 4px;
+    padding: 12px 18px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px 0 0 8px;
     outline: none;
-    background-color: var(--input-bg);
-    color: var(--input-text);
-    transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+    background-color: #f5f5f5;
+    color: #333;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .search-form input:focus {
-    border-color: var(--primary-color);
+    border-color: #FF6B00;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(255,107,0,0.1);
 }
 
 .search-form button {
-    padding: 10px 15px;
-    background-color: var(--primary-color);
+    padding: 12px 20px;
+    background-color: var(--primary-color); /* Использование основного цвета темы */
     color: white;
     border: none;
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 8px 8px 0;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.2s ease;
+    font-weight: 500;
 }
 
 .search-form button:hover {
-    background-color: #217dbb;
+    background-color: #3451e0; /* Более темный оттенок основного цвета */
+    transform: translateY(-1px);
 }
 
-/* Иконки в шапке */
+/* Современные иконки в шапке */
 .header-icons {
     display: flex;
-    gap: 15px;
+    gap: 18px;
     align-items: center;
 }
 
 .header-icon {
     text-decoration: none;
-    font-size: 20px;
+    font-size: 18px;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    transition: all 0.3s;
-    /* Всегда устанавливаем цвет напрямую, игнорируя переменные и наследование */
-    color: #2c3e50 !important; /* Темный цвет по умолчанию в светлой теме */
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    color: #444 !important;
+    background-color: transparent;
+    z-index: 10;
+    pointer-events: auto;
 }
 
 .header-icon:hover {
@@ -143,43 +157,60 @@ body.dark-theme .header-icon {
     background-color: #2196F3;
 }
 
-/* Навигация */
+/* Современная навигация */
 nav {
-    background-color: var(--dark-color);
-    padding: 10px 0;
-    transition: background-color 0.3s;
+    background-color: #fff;
+    border-bottom: 1px solid #eaeaea;
+    padding: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
 .main-menu {
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: 0;
     padding: 0;
     margin: 0;
     flex-wrap: wrap;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .main-menu a {
-    color: #ffffff !important; /* Белый цвет для обеих тем по умолчанию */
+    color: #333 !important;
     text-decoration: none;
-    padding: 8px 15px;
-    border-radius: 4px;
-    transition: background-color 0.3s, color 0.3s;
+    padding: 15px 20px;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
+    font-weight: 500;
+    font-size: 15px;
+    border-bottom: 3px solid transparent;
 }
 
-/* Переопределение для светлой темы */
+/* Современные стили для навигации */
 body:not(.dark-theme) .main-menu a {
-    color: #000000 !important; /* Чёрный цвет для светлой темы */
+    color: #333 !important;
 }
 
 .main-menu a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--accent-color) !important;
+    border-bottom: 3px solid var(--accent-color);
+    background-color: transparent;
+}
+
+.main-menu a.active {
+    color: var(--primary-color) !important;
+    border-bottom: 3px solid var(--primary-color);
 }
 
 .main-menu i {
     margin-right: 8px;
+    font-size: 16px;
 }
 
 /* Кнопки переключения темы */

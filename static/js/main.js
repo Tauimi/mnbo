@@ -1,3 +1,97 @@
+
+// Функция для инициализации карусели баннеров
+function initBannersCarousel() {
+    const slides = document.querySelectorAll('.banner-slide');
+    const indicators = document.querySelectorAll('.carousel-indicator');
+    const prevBtn = document.querySelector('.carousel-arrow.prev');
+    const nextBtn = document.querySelector('.carousel-arrow.next');
+    
+    if (!slides.length) return;
+    
+    let currentSlide = 0;
+    const slideCount = slides.length;
+    
+    // Функция для показа слайда
+    function showSlide(index) {
+        // Скрываем все слайды и индикаторы
+        slides.forEach(slide => slide.classList.remove('active'));
+        indicators.forEach(dot => dot.classList.remove('active'));
+        
+        // Показываем нужный слайд и индикатор
+        slides[index].classList.add('active');
+        if (indicators[index]) {
+            indicators[index].classList.add('active');
+        }
+    }
+    
+    // Следующий слайд
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slideCount;
+        showSlide(currentSlide);
+    }
+    
+    // Предыдущий слайд
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+        showSlide(currentSlide);
+    }
+    
+    // Назначаем обработчики событий
+    if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+    if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+    
+    // Привязываем индикаторы
+    indicators.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentSlide = index;
+            showSlide(currentSlide);
+        });
+    });
+    
+    // Автоматическая смена слайдов
+    setInterval(nextSlide, 5000);
+    
+    // Показываем первый слайд
+    showSlide(0);
+}
+
+// Функция для анимации появления карточек товаров
+function animateProducts() {
+    const products = document.querySelectorAll('.product-card');
+    
+    if (!products.length) return;
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    products.forEach(product => {
+        product.style.opacity = '0';
+        product.style.transform = 'translateY(20px)';
+        product.style.transition = 'all 0.4s ease';
+        observer.observe(product);
+    });
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    initBannersCarousel();
+    animateProducts();
+    
+    // Фиксация z-index в шапке для лучшей кликабельности
+    const headerLinks = document.querySelectorAll('header a, nav a, .header-icon');
+    headerLinks.forEach(link => {
+        link.style.zIndex = '20';
+        link.style.position = 'relative';
+    });
+});
+
 // Основной JavaScript файл
 
 document.addEventListener('DOMContentLoaded', function() {

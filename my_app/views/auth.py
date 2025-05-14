@@ -33,6 +33,8 @@ def login():
             session.clear()
             # Авторизуем пользователя
             session['user_id'] = user.id
+            # Устанавливаем флаг is_admin в сессию
+            session['is_admin'] = user.is_admin
             session.permanent = True  # Делаем сессию постоянной
 
             # Если есть параметр next, перенаправляем туда
@@ -89,6 +91,8 @@ def register():
         
         # Авторизуем пользователя
         session['user_id'] = user.id
+        # Устанавливаем флаг is_admin в сессию
+        session['is_admin'] = user.is_admin
         
         flash('Вы успешно зарегистрировались', 'success')
         return redirect(url_for('shop.home'))
@@ -100,6 +104,8 @@ def logout():
     """Выход из системы"""
     # Удаляем пользователя из сессии
     session.pop('user_id', None)
+    # Удаляем флаг администратора
+    session.pop('is_admin', None)
     
     flash('Вы вышли из системы', 'success')
     return redirect(url_for('shop.home'))
