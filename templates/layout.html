@@ -29,7 +29,7 @@
         }
     </script>
 </head>
-<body class="default-theme">
+<body class="default-theme {% if 'user_id' in session %}logged-in{% endif %}">
     {% include 'header.html' %}
 
     <div class="container">
