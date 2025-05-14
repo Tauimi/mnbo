@@ -15,24 +15,31 @@ def login():
     # Если пользователь уже авторизован, перенаправляем на главную
     if 'user_id' in session:
         return redirect(url_for('shop.home'))
-    
+
     if request.method == 'POST':
         # Получаем данные из формы
         username = request.form.get('username')
         password = request.form.get('password')
-        
-        # Проверяем, существует ли пользователь
+
+        # Проверяем, существует ли пользователь по имени пользователя
         user = User.query.filter_by(username=username).first()
-        
+
+        # Если пользователь не найден по имени, проверяем по email
+        if not user:
+            user = User.query.filter_by(email=username).first()
+
         if user and user.check_password(password):
+            # Очищаем сессию перед авторизацией для избежания проблем
+            session.clear()
             # Авторизуем пользователя
             session['user_id'] = user.id
-            
+            session.permanent = True  # Делаем сессию постоянной
+
             # Если есть параметр next, перенаправляем туда
             next_page = request.args.get('next')
             if next_page:
                 return redirect(next_page)
-            
+
             flash('Вы успешно вошли в систему', 'success')
             return redirect(url_for('shop.home'))
         else:
@@ -95,4 +102,4 @@ def logout():
     session.pop('user_id', None)
     
     flash('Вы вышли из системы', 'success')
-    return redirect(url_for('shop.home')) 
+    return redirect(url_for('shop.home'))

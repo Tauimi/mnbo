@@ -5,7 +5,13 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 import os
 from sqlalchemy import func
 from my_app.extensions import db
-from my_app.models import Product, Category, Visitor
+from my_app.models.product import Product
+from my_app.models.category import Category
+from my_app.models.visitor import Visitor
+from my_app.models.review import Review
+from my_app.models.review_vote import ReviewVote
+from my_app.models.rating import Rating
+from my_app.models.feedback import FeedbackMessage
 
 # Создаем Blueprint
 shop_bp = Blueprint('shop', __name__, url_prefix='')
